@@ -16,7 +16,8 @@ with open("faiss_store.pkl", "rb") as f:
 store.index = index
 
 chain = VectorDBQAWithSourcesChain.from_llm(
-    llm=OpenAI(temperature=1.0), vectorstore=store
+    llm=OpenAI(temperature=0, model_name='text-curie-001', max_tokens=100), 
+    vectorstore=store
 )
 
 result = chain({"question": args.question})

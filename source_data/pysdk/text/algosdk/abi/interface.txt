@@ -1,0 +1,40 @@
+interface
+*********
+
+class InterfaceDict_Optional
+
+   Bases: "TypedDict"
+
+   desc: str
+
+class InterfaceDict
+
+   Bases: "dict"
+
+   name: str
+
+   methods: List[algosdk.abi.method.MethodDict]
+
+   desc: str
+
+class Interface(name: str, methods: List[algosdk.abi.method.Method], desc: Optional[str] = None)
+
+   Bases: "object"
+
+   Represents a ABI interface description.
+
+   Parameters:
+      * **name** (*string*) -- name of the interface
+
+      * **methods** (*list*) -- list of Method objects
+
+      * **desc** (*string**, **optional*) -- description of the
+        interface
+
+   static from_json(resp: Union[str, bytes, bytearray]) -> algosdk.abi.interface.Interface
+
+   dictify() -> algosdk.abi.interface.InterfaceDict
+
+   static undictify(d: dict) -> algosdk.abi.interface.Interface
+
+   get_method_by_name(name: str) -> algosdk.abi.method.Method

@@ -1,0 +1,341 @@
+atomic_transaction_composer
+***************************
+
+class AtomicTransactionComposerStatus(value)
+
+   Bases: "enum.IntEnum"
+
+   An enumeration.
+
+   BUILDING = 0
+
+   BUILT = 1
+
+   SIGNED = 2
+
+   SUBMITTED = 3
+
+   COMMITTED = 4
+
+populate_foreign_array(value_to_add: algosdk.atomic_transaction_composer.T, foreign_array: List[algosdk.atomic_transaction_composer.T], zero_value: Optional[algosdk.atomic_transaction_composer.T] = None) -> int
+
+   Add a value to an application call's foreign array. The addition
+   will be as compact as possible, and this function will return an
+   index used to reference *value_to_add* in the *foreign_array*.
+
+   Parameters:
+      * **value_to_add** -- value to add to the array. If the value is
+        already present, it will not be added again. Instead, the
+        existing index will be returned.
+
+      * **foreign_array** -- the existing foreign array. This input
+        may be modified to append *value_to_add*.
+
+      * **zero_value** -- If provided, this value indicates two
+        things: the 0 value is reserved for this array so
+        *foreign_array* must start at index 1; additionally, if
+        *value_to_add* equals *zero_value*, then *value_to_add* will
+        not be added to the array and the 0 index will be returned.
+
+class AtomicTransactionComposer
+
+   Bases: "object"
+
+   Constructs an atomic transaction group which may contain a
+   combination of Transactions and ABI Method calls.
+
+   Parameters:
+      * **status** (*AtomicTransactionComposerStatus*) -- IntEnum
+        representing the current state of the composer
+
+      * **method_dict** (*dict*) -- dictionary of an index in the
+        transaction list to a Method object
+
+      * **txn_list** (*list**[**TransactionWithSigner**]*) -- list of
+        transactions with signers
+
+      * **signed_txns** (*list**[**GenericSignedTransaction**]*) --
+        list of signed transactions
+
+      * **tx_ids** (*list**[**str**]*) -- list of individual
+        transaction IDs in this atomic group
+
+   MAX_GROUP_SIZE = 16
+
+   MAX_APP_ARG_LIMIT = 16
+
+   get_status() -> algosdk.atomic_transaction_composer.AtomicTransactionComposerStatus
+
+      Returns the status of this composer's transaction group.
+
+   get_tx_count() -> int
+
+      Returns the number of transactions currently in this atomic
+      group.
+
+   clone() -> algosdk.atomic_transaction_composer.AtomicTransactionComposer
+
+      Creates a new composer with the same underlying transactions.
+      The new composer's status will be BUILDING, so additional
+      transactions may be added to it.
+
+   add_transaction(txn_and_signer: algosdk.atomic_transaction_composer.TransactionWithSigner) -> algosdk.atomic_transaction_composer.AtomicTransactionComposer
+
+      Adds a transaction to this atomic group.
+
+      An error will be thrown if the composer's status is not
+      BUILDING, or if adding this transaction causes the current group
+      to exceed MAX_GROUP_SIZE.
+
+      Parameters:
+         **txn_and_signer** (*TransactionWithSigner*) --
+
+   add_method_call(app_id: int, method: algosdk.abi.method.Method, sender: str, sp: algosdk.transaction.SuggestedParams, signer: algosdk.atomic_transaction_composer.TransactionSigner, method_args: Optional[List[Union[Any, algosdk.atomic_transaction_composer.TransactionWithSigner]]] = None, on_complete: algosdk.transaction.OnComplete = OnComplete.NoOpOC, local_schema: Optional[algosdk.transaction.StateSchema] = None, global_schema: Optional[algosdk.transaction.StateSchema] = None, approval_program: Optional[bytes] = None, clear_program: Optional[bytes] = None, extra_pages: Optional[int] = None, accounts: Optional[List[str]] = None, foreign_apps: Optional[List[int]] = None, foreign_assets: Optional[List[int]] = None, note: Optional[bytes] = None, lease: Optional[bytes] = None, rekey_to: Optional[str] = None, boxes: Optional[List[Tuple[int, bytes]]] = None) -> algosdk.atomic_transaction_composer.AtomicTransactionComposer
+
+      Add a smart contract method call to this atomic group.
+
+      An error will be thrown if the composer's status is not
+      BUILDING, if adding this transaction causes the current group to
+      exceed MAX_GROUP_SIZE, or if the provided arguments are invalid
+      for the given method.
+
+      Parameters:
+         * **app_id** (*int*) -- application id of app that the method
+           is being invoked on
+
+         * **method** (*Method*) -- ABI method object with initialized
+           arguments and return types
+
+         * **sender** (*str*) -- address of the sender
+
+         * **sp** (*SuggestedParams*) -- suggested params from algod
+
+         * **signer** (*TransactionSigner*) -- signer that will sign
+           the transactions
+
+         * **method_args** (*list**[**ABIValue** |
+           **TransactionWithSigner**]**, **optional*) -- list of
+           arguments to be encoded or transactions that immediate
+           precede this method call
+
+         * **on_complete** (*OnComplete**, **optional*) -- intEnum
+           representing what app should do on completion and if blank,
+           it will default to a NoOp call
+
+         * **local_schema** (*StateSchema**, **optional*) -- restricts
+           what can be stored by created application; must be omitted
+           if not creating an application
+
+         * **global_schema** (*StateSchema**, **optional*) --
+           restricts what can be stored by created application; must
+           be omitted if not creating an application
+
+         * **approval_program** (*bytes**, **optional*) -- the program
+           to run on transaction approval; must be omitted if not
+           creating or updating an application
+
+         * **clear_program** (*bytes**, **optional*) -- the program to
+           run when state is being cleared; must be omitted if not
+           creating or updating an application
+
+         * **extra_pages** (*int**, **optional*) -- additional program
+           space for supporting larger programs. A page is 1024 bytes.
+
+         * **accounts** (*list**[**string**]**, **optional*) -- list
+           of additional accounts involved in call
+
+         * **foreign_apps** (*list**[**int**]**, **optional*) -- list
+           of other applications (identified by index) involved in
+           call
+
+         * **foreign_assets** (*list**[**int**]**, **optional*) --
+           list of assets involved in call
+
+         * **note** (*bytes**, **optional*) -- arbitrary optional
+           bytes
+
+         * **lease** (*byte**[**32**]**, **optional*) -- specifies a
+           lease, and no other transaction with the same sender and
+           lease can be confirmed in this transaction's valid rounds
+
+         * **rekey_to** (*str**, **optional*) -- additionally rekey
+           the sender to this address
+
+         * **boxes** (*list**[**(**int**, **bytes**)**]**,
+           **optional*) -- list of tuples specifying app id and key
+           for boxes the app may access
+
+   build_group() -> list
+
+      Finalize the transaction group and returns the finalized
+      transactions with signers. The composer's status will be at
+      least BUILT after executing this method.
+
+      Returns:
+         list of transactions with signers
+
+      Return type:
+         list[TransactionWithSigner]
+
+   gather_signatures() -> list
+
+      Obtain signatures for each transaction in this group. If
+      signatures have already been obtained, this method will return
+      cached versions of the signatures. The composer's status will be
+      at least SIGNED after executing this method. An error will be
+      thrown if signing any of the transactions fails.
+
+      Returns:
+         list of signed transactions
+
+      Return type:
+         List[GenericSignedTransaction]
+
+   submit(client: algosdk.v2client.algod.AlgodClient) -> List[str]
+
+      Send the transaction group to the network, but don't wait for it
+      to be committed to a block. An error will be thrown if
+      submission fails. The composer's status must be SUBMITTED or
+      lower before calling this method. If submission is successful,
+      this composer's status will update to SUBMITTED.
+
+      Note: a group can only be submitted again if it fails.
+
+      Parameters:
+         **client** (*AlgodClient*) -- Algod V2 client
+
+      Returns:
+         list of submitted transaction IDs
+
+      Return type:
+         List[str]
+
+   execute(client: algosdk.v2client.algod.AlgodClient, wait_rounds: int) -> algosdk.atomic_transaction_composer.AtomicTransactionResponse
+
+      Send the transaction group to the network and wait until it's
+      committed to a block. An error will be thrown if submission or
+      execution fails. The composer's status must be SUBMITTED or
+      lower before calling this method, since execution is only
+      allowed once. If submission is successful, this composer's
+      status will update to SUBMITTED. If the execution is also
+      successful, this composer's status will update to COMMITTED.
+
+      Note: a group can only be submitted again if it fails.
+
+      Parameters:
+         * **client** (*AlgodClient*) -- Algod V2 client
+
+         * **wait_rounds** (*int*) -- maximum number of rounds to wait
+           for transaction confirmation
+
+      Returns:
+         Object with confirmed round for this transaction,
+            a list of txIDs of the submitted transactions, and an
+            array of results for each method call transaction in this
+            group. If a method has no return value (void), then the
+            method results array will contain None for that method's
+            return value.
+
+      Return type:
+         AtomicTransactionResponse
+
+class TransactionSigner
+
+   Bases: "abc.ABC"
+
+   Represents an object which can sign transactions from an atomic
+   transaction group.
+
+   abstract sign_transactions(txn_group: List[algosdk.transaction.Transaction], indexes: List[int]) -> List[Union[algosdk.transaction.SignedTransaction, algosdk.transaction.LogicSigTransaction, algosdk.transaction.MultisigTransaction]]
+
+class AccountTransactionSigner(private_key: str)
+
+   Bases: "algosdk.atomic_transaction_composer.TransactionSigner"
+
+   Represents a Transaction Signer for an account that can sign
+   transactions from an atomic transaction group.
+
+   Parameters:
+      **private_key** (*str*) -- private key of signing account
+
+   sign_transactions(txn_group: List[algosdk.transaction.Transaction], indexes: List[int]) -> List[Union[algosdk.transaction.SignedTransaction, algosdk.transaction.LogicSigTransaction, algosdk.transaction.MultisigTransaction]]
+
+      Sign transactions in a transaction group given the indexes.
+
+      Returns an array of encoded signed transactions. The length of
+      the array will be the same as the length of indexesToSign, and
+      each index i in the array corresponds to the signed transaction
+      from txnGroup[indexesToSign[i]].
+
+      Parameters:
+         * **txn_group** (*list**[**Transaction**]*) -- atomic group
+           of transactions
+
+         * **indexes** (*list**[**int**]*) -- array of indexes in the
+           atomic transaction group that should be signed
+
+class LogicSigTransactionSigner(lsig: algosdk.transaction.LogicSigAccount)
+
+   Bases: "algosdk.atomic_transaction_composer.TransactionSigner"
+
+   Represents a Transaction Signer for a LogicSig that can sign
+   transactions from an atomic transaction group.
+
+   Parameters:
+      **lsig** (*LogicSigAccount*) -- LogicSig account
+
+   sign_transactions(txn_group: List[algosdk.transaction.Transaction], indexes: List[int]) -> List[Union[algosdk.transaction.SignedTransaction, algosdk.transaction.LogicSigTransaction, algosdk.transaction.MultisigTransaction]]
+
+      Sign transactions in a transaction group given the indexes.
+
+      Returns an array of encoded signed transactions. The length of
+      the array will be the same as the length of indexesToSign, and
+      each index i in the array corresponds to the signed transaction
+      from txnGroup[indexesToSign[i]].
+
+      Parameters:
+         * **txn_group** (*list**[**Transaction**]*) -- atomic group
+           of transactions
+
+         * **indexes** (*list**[**int**]*) -- array of indexes in the
+           atomic transaction group that should be signed
+
+class MultisigTransactionSigner(msig: algosdk.transaction.Multisig, sks: List[str])
+
+   Bases: "algosdk.atomic_transaction_composer.TransactionSigner"
+
+   Represents a Transaction Signer for a Multisig that can sign
+   transactions from an atomic transaction group.
+
+   Parameters:
+      * **msig** (*Multisig*) -- Multisig account
+
+      * **sks** (*str*) -- private keys of multisig
+
+   sign_transactions(txn_group: List[algosdk.transaction.Transaction], indexes: List[int]) -> List[Union[algosdk.transaction.SignedTransaction, algosdk.transaction.LogicSigTransaction, algosdk.transaction.MultisigTransaction]]
+
+      Sign transactions in a transaction group given the indexes.
+
+      Returns an array of encoded signed transactions. The length of
+      the array will be the same as the length of indexesToSign, and
+      each index i in the array corresponds to the signed transaction
+      from txnGroup[indexesToSign[i]].
+
+      Parameters:
+         * **txn_group** (*list**[**Transaction**]*) -- atomic group
+           of transactions
+
+         * **indexes** (*list**[**int**]*) -- array of indexes in the
+           atomic transaction group that should be signed
+
+class TransactionWithSigner(txn: algosdk.transaction.Transaction, signer: algosdk.atomic_transaction_composer.TransactionSigner)
+
+   Bases: "object"
+
+class ABIResult(tx_id: str, raw_value: bytes, return_value: Any, decode_error: Optional[Exception], tx_info: dict, method: algosdk.abi.method.Method)
+
+   Bases: "object"
+
+class AtomicTransactionResponse(confirmed_round: int, tx_ids: List[str], results: List[algosdk.atomic_transaction_composer.ABIResult])
+
+   Bases: "object"

@@ -1,0 +1,4 @@
+title: Common node operations
+arrange:
+  - switch_networks.md
+  - catchup.md

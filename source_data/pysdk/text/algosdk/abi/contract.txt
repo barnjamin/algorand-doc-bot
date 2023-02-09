@@ -1,0 +1,64 @@
+contract
+********
+
+class NetworkInfoDict
+
+   Bases: "TypedDict"
+
+   appID: int
+
+class ContractDict_Optional
+
+   Bases: "TypedDict"
+
+   desc: str
+
+class ContractDict
+
+   Bases: "dict"
+
+   name: str
+
+   methods: List[algosdk.abi.method.MethodDict]
+
+   networks: Dict[str, algosdk.abi.contract.NetworkInfoDict]
+
+   desc: str
+
+class Contract(name: str, methods: List[algosdk.abi.method.Method], desc: Optional[str] = None, networks: Optional[Dict[str, algosdk.abi.contract.NetworkInfo]] = None)
+
+   Bases: "object"
+
+   Represents a ABI contract description.
+
+   Parameters:
+      * **name** (*string*) -- name of the contract
+
+      * **methods** (*list*) -- list of Method objects
+
+      * **desc** (*string**, **optional*) -- description of the
+        contract
+
+      * **networks** (*dict**, **optional*) -- information about the
+        contract in a particular network, such as an app-id.
+
+   static from_json(resp: Union[str, bytes, bytearray]) -> algosdk.abi.contract.Contract
+
+   dictify() -> algosdk.abi.contract.ContractDict
+
+   static undictify(d: dict) -> algosdk.abi.contract.Contract
+
+   get_method_by_name(name: str) -> algosdk.abi.method.Method
+
+class NetworkInfo(app_id: int)
+
+   Bases: "object"
+
+   Represents network information.
+
+   Parameters:
+      **app_id** (*int*) -- application ID on a particular network
+
+   dictify() -> algosdk.abi.contract.NetworkInfoDict
+
+   static undictify(d: dict) -> algosdk.abi.contract.NetworkInfo

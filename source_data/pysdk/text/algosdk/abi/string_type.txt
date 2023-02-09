@@ -1,0 +1,43 @@
+string_type
+***********
+
+class StringType
+
+   Bases: "algosdk.abi.base_type.ABIType"
+
+   Represents a String ABI Type for encoding.
+
+   byte_len() -> NoReturn
+
+      Return the length in bytes of the ABI type.
+
+   is_dynamic() -> bool
+
+      Return whether the ABI type is dynamic.
+
+   encode(string_val: str) -> bytes
+
+      Encode a value into a String ABI bytestring.
+
+      Parameters:
+         **value** (*str*) -- string to be encoded.
+
+      Returns:
+         encoded bytes of the string
+
+      Return type:
+         bytes
+
+   decode(bytestring: Union[bytes, bytearray]) -> str
+
+      Decodes a bytestring to a string.
+
+      Parameters:
+         **bytestring** (*bytes** | **bytearray*) -- bytestring to be
+         decoded
+
+      Returns:
+         string from the encoded bytestring
+
+      Return type:
+         str

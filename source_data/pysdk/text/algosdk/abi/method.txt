@@ -1,0 +1,106 @@
+method
+******
+
+class MethodDict_Optional
+
+   Bases: "TypedDict"
+
+   desc: str
+
+class MethodDict
+
+   Bases: "dict"
+
+   name: str
+
+   args: List[dict]
+
+   returns: dict
+
+   desc: str
+
+class Method(name: str, args: List[algosdk.abi.method.Argument], returns: algosdk.abi.method.Returns, desc: Optional[str] = None)
+
+   Bases: "object"
+
+   Represents a ABI method description.
+
+   Parameters:
+      * **name** (*string*) -- name of the method
+
+      * **args** (*list*) -- list of Argument objects with type, name,
+        and optional
+
+      * **description** --
+
+      * **returns** (*Returns*) -- a Returns object with a type and
+        optional description
+
+      * **desc** (*string**, **optional*) -- optional description of
+        the method
+
+   get_signature() -> str
+
+   get_selector() -> bytes
+
+      Returns the ABI method signature, which is the first four bytes
+      of the SHA-512/256 hash of the method signature.
+
+      Returns:
+         first four bytes of the method signature hash
+
+      Return type:
+         bytes
+
+   get_txn_calls() -> int
+
+      Returns the number of transactions needed to invoke this ABI
+      method.
+
+   static from_json(resp: Union[str, bytes, bytearray]) -> algosdk.abi.method.Method
+
+   static from_signature(s: str) -> algosdk.abi.method.Method
+
+   dictify() -> algosdk.abi.method.MethodDict
+
+   static undictify(d: dict) -> algosdk.abi.method.Method
+
+get_method_by_name(methods: List[algosdk.abi.method.Method], name: str) -> algosdk.abi.method.Method
+
+class Argument(arg_type: str, name: Optional[str] = None, desc: Optional[str] = None)
+
+   Bases: "object"
+
+   Represents an argument for a ABI method
+
+   Parameters:
+      * **arg_type** (*string*) -- ABI type or transaction string of
+        the method argument
+
+      * **name** (*string**, **optional*) -- name of this method
+        argument
+
+      * **desc** (*string**, **optional*) -- description of this
+        method argument
+
+   dictify() -> dict
+
+   static undictify(d: dict) -> algosdk.abi.method.Argument
+
+class Returns(arg_type: str, desc: Optional[str] = None)
+
+   Bases: "object"
+
+   Represents a return type for a ABI method
+
+   Parameters:
+      * **arg_type** (*string*) -- ABI type of this return argument
+
+      * **desc** (*string**, **optional*) -- description of this
+        return argument
+
+   VOID = 'void'
+
+   dictify() -> dict
+
+   static undictify(d: dict) -> algosdk.abi.method.Returns

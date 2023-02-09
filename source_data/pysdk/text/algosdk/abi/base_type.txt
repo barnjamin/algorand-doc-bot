@@ -1,0 +1,30 @@
+base_type
+*********
+
+class ABIType
+
+   Bases: "abc.ABC"
+
+   Represents an ABI Type for encoding.
+
+   abstract is_dynamic() -> bool
+
+      Return whether the ABI type is dynamic.
+
+   abstract byte_len() -> int
+
+      Return the length in bytes of the ABI type.
+
+   abstract encode(value: Any) -> bytes
+
+      Serialize the ABI value into a byte string using ABI encoding
+      rules.
+
+   abstract decode(bytestring: bytes) -> Any
+
+      Deserialize the ABI type and value from a byte string using ABI
+      encoding rules.
+
+   static from_string(s: str) -> algosdk.abi.base_type.ABIType
+
+      Convert a valid ABI string to a corresponding ABI type.

@@ -16,7 +16,7 @@ parser.add_argument(
     "--directory",
     type=str,
     help="The directory to use for training",
-    default="Notion_DB/",
+    default="source_data/",
 )
 args = parser.parse_args()
 
@@ -31,7 +31,7 @@ for p in ps:
 
 # Here we split the documents, as needed, into smaller chunks.
 # We do this due to the context limits of the LLMs.
-text_splitter = CharacterTextSplitter(chunk_size=1500, separator="\n")
+text_splitter = CharacterTextSplitter(chunk_size=2000, separator="\n")
 docs = []
 metadatas = []
 for i, d in enumerate(data):

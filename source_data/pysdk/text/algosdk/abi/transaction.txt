@@ -1,0 +1,24 @@
+transaction
+***********
+
+class ABITransactionType
+
+   Bases: "object"
+
+   ANY = 'txn'
+
+   PAY = 'pay'
+
+   KEYREG = 'keyreg'
+
+   ACFG = 'acfg'
+
+   AXFER = 'axfer'
+
+   AFRZ = 'afrz'
+
+   APPL = 'appl'
+
+is_abi_transaction_type(t: Any) -> bool
+
+check_abi_transaction_type(t: Any, txn: algosdk.transaction.Transaction) -> bool

@@ -1,0 +1,343 @@
+v2client.algod
+**************
+
+class AlgodClient(algod_token, algod_address, headers=None)
+
+   Bases: "object"
+
+   Client class for algod. Handles all algod requests.
+
+   Parameters:
+      * **algod_token** (*str*) -- algod API token
+
+      * **algod_address** (*str*) -- algod address
+
+      * **headers** (*dict**, **optional*) -- extra header name/value
+        for all requests
+
+   algod_token
+
+      Type:
+         str
+
+   algod_address
+
+      Type:
+         str
+
+   headers
+
+      Type:
+         dict
+
+   algod_request(method, requrl, params=None, data=None, headers=None, response_format='json')
+
+      Execute a given request.
+
+      Parameters:
+         * **method** (*str*) -- request method
+
+         * **requrl** (*str*) -- url for the request
+
+         * **params** (*dict**, **optional*) -- parameters for the
+           request
+
+         * **data** (*dict**, **optional*) -- data in the body of the
+           request
+
+         * **headers** (*dict**, **optional*) -- additional header for
+           request
+
+      Returns:
+         loaded from json response body
+
+      Return type:
+         dict
+
+   account_info(address, exclude=None, **kwargs)
+
+      Return account information.
+
+      Parameters:
+         **address** (*str*) -- account public key
+
+   asset_info(asset_id, **kwargs)
+
+      Return information about a specific asset.
+
+      Parameters:
+         **asset_id** (*int*) -- The ID of the asset to look up.
+
+   application_info(application_id, **kwargs)
+
+      Return information about a specific application.
+
+      Parameters:
+         **application_id** (*int*) -- The ID of the application to
+         look up.
+
+   application_box_by_name(application_id: int, box_name: bytes, **kwargs)
+
+      Return the value of an application's box.
+
+      NOTE: box values are returned as base64-encoded strings.
+
+      Parameters:
+         * **application_id** (*int*) -- The ID of the application to
+           look up.
+
+         * **box_name** (*bytes*) -- The name or key of the box.
+
+   application_boxes(application_id: int, limit: int = 0, **kwargs)
+
+      Given an application ID, return all Box names. No particular
+      ordering is guaranteed. Request fails when client or server-side
+      configured limits prevent returning all Box names.
+
+      NOTE: box names are returned as base64-encoded strings.
+
+      Parameters:
+         * **application_id** (*int*) -- The ID of the application to
+           look up.
+
+         * **limit** (*int**, **optional*) -- Max number of box names
+           to return. If max is not set, or max == 0, returns all box-
+           names up to the maximum configured by the algod server
+           being queried.
+
+   account_asset_info(address, asset_id, **kwargs)
+
+      Return asset information for a specific account.
+
+      Parameters:
+         * **address** (*str*) -- account public key
+
+         * **asset_id** (*int*) -- The ID of the asset to look up.
+
+   account_application_info(address, application_id, **kwargs)
+
+      Return application information for a specific account.
+
+      Parameters:
+         * **address** (*str*) -- account public key
+
+         * **application_id** (*int*) -- The ID of the application to
+           look up.
+
+   pending_transactions_by_address(address, limit=0, response_format='json', **kwargs)
+
+      Get the list of pending transactions by address, sorted by
+      priority, in decreasing order, truncated at the end at MAX. If
+      MAX = 0, returns all pending transactions.
+
+      Parameters:
+         * **address** (*str*) -- account public key
+
+         * **limit** (*int**, **optional*) -- maximum number of
+           transactions to return
+
+         * **response_format** (*str*) -- the format in which the
+           response is returned: either "json" or "msgpack"
+
+   block_info(block=None, response_format='json', round_num=None, **kwargs)
+
+      Get the block for the given round.
+
+      Parameters:
+         * **block** (*int*) -- block number
+
+         * **response_format** (*str*) -- the format in which the
+           response is returned: either "json" or "msgpack"
+
+         * **round_num** (*int**, **optional*) -- alias for block;
+           specify one of these
+
+   ledger_supply(**kwargs)
+
+      Return supply details for node's ledger.
+
+   status(**kwargs)
+
+      Return node status.
+
+   status_after_block(block_num=None, round_num=None, **kwargs)
+
+      Return node status immediately after blockNum.
+
+      Parameters:
+         * **block_num** -- block number
+
+         * **round_num** (*int**, **optional*) -- alias for block_num;
+           specify one of these
+
+   send_transaction(txn, **kwargs)
+
+      Broadcast a signed transaction object to the network.
+
+      Parameters:
+         * **txn** (*SignedTransaction** or **MultisigTransaction*) --
+           transaction to send
+
+         * **request_header** (*dict**, **optional*) -- additional
+           header for request
+
+      Returns:
+         transaction ID
+
+      Return type:
+         str
+
+   send_raw_transaction(txn, **kwargs)
+
+      Broadcast a signed transaction to the network.
+
+      Parameters:
+         * **txn** (*str*) -- transaction to send, encoded in base64
+
+         * **request_header** (*dict**, **optional*) -- additional
+           header for request
+
+      Returns:
+         transaction ID
+
+      Return type:
+         str
+
+   pending_transactions(max_txns=0, response_format='json', **kwargs)
+
+      Return pending transactions.
+
+      Parameters:
+         * **max_txns** (*int*) -- maximum number of transactions to
+           return; if max_txns is 0, return all pending transactions
+
+         * **response_format** (*str*) -- the format in which the
+           response is returned: either "json" or "msgpack"
+
+   pending_transaction_info(transaction_id, response_format='json', **kwargs)
+
+      Return transaction information for a pending transaction.
+
+      Parameters:
+         * **transaction_id** (*str*) -- transaction ID
+
+         * **response_format** (*str*) -- the format in which the
+           response is returned: either "json" or "msgpack"
+
+   health(**kwargs)
+
+      Return null if the node is running.
+
+   versions(**kwargs)
+
+      Return algod versions.
+
+   send_transactions(txns, **kwargs)
+
+      Broadcast list of a signed transaction objects to the network.
+
+      Parameters:
+         * **txns** (*SignedTransaction**[**] or
+           **MultisigTransaction**[**]*) -- transactions to send
+
+         * **request_header** (*dict**, **optional*) -- additional
+           header for request
+
+      Returns:
+         first transaction ID
+
+      Return type:
+         str
+
+   suggested_params(**kwargs)
+
+      Return suggested transaction parameters.
+
+   compile(source, source_map=False, **kwargs)
+
+      Compile TEAL source with remote algod.
+
+      Parameters:
+         * **source** (*str*) -- source to be compiled
+
+         * **request_header** (*dict**, **optional*) -- additional
+           header for request
+
+      Returns:
+         loaded from json response body. "result" property contains
+         compiled bytes, "hash" - program hash (escrow address)
+
+      Return type:
+         dict
+
+   disassemble(program_bytes, **kwargs)
+
+      Disassable TEAL program bytes with remote algod. :param program:
+      bytecode to be disassembled :type program: bytes :param
+      request_header: additional header for request :type
+      request_header: dict, optional
+
+      Returns:
+         disassembled TEAL source code in plain text
+
+      Return type:
+         str
+
+   dryrun(drr, **kwargs)
+
+      Dryrun with remote algod.
+
+      Parameters:
+         * **drr** (*obj*) -- dryrun request object
+
+         * **request_header** (*dict**, **optional*) -- additional
+           header for request
+
+      Returns:
+         loaded from json response body
+
+      Return type:
+         dict
+
+   genesis(**kwargs)
+
+      Returns the entire genesis file.
+
+   transaction_proof(round_num, txid, hashtype='', response_format='json', **kwargs)
+
+      Get a proof for a transaction in a block.
+
+      Parameters:
+         * **round_num** (*int*) -- The round in which the transaction
+           appears.
+
+         * **txid** (*str*) -- The transaction ID for which to
+           generate a proof.
+
+         * **hashtype** (*str*) -- The type of hash function used to
+           create the proof, must be either sha512_256 or sha256.
+
+   lightblockheader_proof(round_num, **kwargs)
+
+         Gets a proof for a given light block header inside a state
+         proof commitment.
+
+      Parameters:
+         **round_num** (*int*) -- The round to which the light block
+         header belongs.
+
+   stateproofs(round_num, **kwargs)
+
+      Get a state proof that covers a given round
+
+      Parameters:
+         **round_num** (*int*) -- The round for which a state proof is
+         desired.
+
+   get_block_hash(round_num, **kwargs)
+
+      Get the block hash for the block on the given round.
+
+      Parameters:
+         **round_num** (*int*) -- The round in which the transaction
+         appears.
