@@ -16,10 +16,11 @@ args = parser.parse_args()
 with open("faiss_store.pkl", "rb") as f:
     store = pickle.load(f)
 store.index = faiss.read_index("docs.index")
+expensive="text-davinci-003"	
 text="text-curie-001"
 code="code-cushman-001"	
 chain = VectorDBQAWithSourcesChain.from_llm(
-    llm=OpenAI(temperature=0, model_name=code),
+    llm=OpenAI(temperature=0.1, model_name=expensive, max_tokens=1024),
     vectorstore=store,
     question_prompt=question_prompt,
     combine_prompt=combine_prompt,
