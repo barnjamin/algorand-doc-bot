@@ -18,6 +18,7 @@ parser.add_argument(
     help="The directory to use for training",
     default="source_data/",
 )
+
 args = parser.parse_args()
 
 ps = list(Path(args.directory).glob("**/*.md"))
@@ -41,8 +42,14 @@ for i, d in enumerate(data):
 
 
 # Here we create a vector store from the documents and save it to disk.
-store = FAISS.from_texts(docs, OpenAIEmbeddings(), metadatas=metadatas)
-faiss.write_index(store.index, "docs.index")
-store.index = None
-with open("faiss_store.pkl", "wb") as f:
-    pickle.dump(store, f)
+#new_store = FAISS.from_texts(docs, OpenAIEmbeddings(), metadatas=metadatas)
+with open("faiss_store.pkl", "rb") as f:
+    current_store: FAISS = pickle.load(f)
+current_store.index = faiss.read_index("docs.index")
+
+current_store.add_texts(docs,  metadatas=metadatas)
+
+faiss.write_index(current_store.index, "docs.index")
+current_store.index = None
+with open("faiss_store2.pk", "wb") as f:
+    pickle.dump(current_store, f)

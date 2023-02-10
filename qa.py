@@ -3,6 +3,7 @@ import faiss
 import pickle
 import argparse
 
+from langchain.vectorstores.faiss import FAISS
 from langchain import OpenAI
 from langchain.chains import VectorDBQAWithSourcesChain
 
@@ -14,11 +15,11 @@ args = parser.parse_args()
 
 # Load the LangChain.
 with open("faiss_store.pkl", "rb") as f:
-    store = pickle.load(f)
+    store: FAISS = pickle.load(f)
 store.index = faiss.read_index("docs.index")
-expensive="text-davinci-003"	
-text="text-curie-001"
-code="code-cushman-001"	
+expensive = "text-davinci-003"
+text = "text-curie-001"
+code = "code-cushman-001"
 chain = VectorDBQAWithSourcesChain.from_llm(
     llm=OpenAI(temperature=0.1, model_name=expensive, max_tokens=1024),
     vectorstore=store,
