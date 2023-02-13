@@ -34,7 +34,7 @@ python qa.py "How many box references can I pass in a single app call?"
 
 ## Can I add to it?
 
-Yes, submit a pr with a markdown document in a new named file in data_sources and I'll add it to the vector db locally then push it.
+Yes, submit a pr with a new source directory in `source_data` containing markdown documents I'll add it to the vector db locally then push it.
 
 To add a source locally, follow the steps above to set up the environment. 
 
@@ -42,3 +42,10 @@ Then run:
 ```sh
 python ingest.py -d source_data/$SOURCE_NAME/
 ```
+
+# TODO:
+
+- [ ] Source manifest file
+- [ ] Replace current prompts with examples 
+- [ ] Add chat logs with QA from Discord 
+- [ ] Add codex to possible outputs

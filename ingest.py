@@ -42,6 +42,7 @@ for i, d in enumerate(data):
 
 
 # Here we create a vector store from the documents and save it to disk.
+# TODO: check if it exists, then load it or make a new one 
 #new_store = FAISS.from_texts(docs, OpenAIEmbeddings(), metadatas=metadatas)
 with open("faiss_store.pkl", "rb") as f:
     current_store: FAISS = pickle.load(f)
