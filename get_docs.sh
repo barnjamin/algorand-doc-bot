@@ -9,10 +9,12 @@ PY_DIR="$CORPUS_DIR/pysdk"
 GO_DIR="$CORPUS_DIR/gosdk"
 JAVA_DIR="$CORPUS_DIR/javasdk"
 PYTEAL_DIR="$CORPUS_DIR/pyteal"
+ARCS_DIR="$CORPUS_DIR/arcs"
 
-#TODO: args to fire off fns when we want to refresh some doc 
+#TODO: parse args to fire off fns when we want to refresh some doc 
 
 reset(){
+    echo "Resetting"
     [ -d $CORPUS_DIR ] && rm -rf $CORPUS_DIR
     mkdir $CORPUS_DIR 
     mkdir $SPEC_DIR
@@ -24,7 +26,6 @@ reset(){
     mkdir $PYTEAL_DIR
 }
 
-
 specs(){
     echo "Getting specs"
     [ -d $SPEC_DIR ] && rm -rf $SPEC_DIR
@@ -33,14 +34,20 @@ specs(){
     rm -rf specs
 }
 
-
-
 devdocs(){
     echo "Getting docs"
     [ -d $DEVDOC_DIR ] && rm -rf $DEVDOC_DIR
     git clone https://github.com/algorand/docs.git 
     cp -R docs/docs/* $DEVDOC_DIR
     rm -rf docs
+}
+
+arcs(){
+    echo "Getting ARCs"
+    [ -d $ARCS_DIR ] && rm -rf $ARCS_DIR
+    git clone https://github.com/algorandfoundation/ARCs.git
+    cp -R ARCs/ARCs/ $ARCS_DIR
+    rm -rf ARCs
 }
 
 pysdk(){
@@ -74,14 +81,25 @@ jssdk(){
 
 
 gosdk(){
-
+    echo "Getting gosdk"
+    #[ -d $GO_DIR ] && rm -rf $GO_DIR
+    #git clone https://github.com/algorand/go-algorand-sdk.git
+    #cd go-algorand-sdk
+    #godoc
+    #cp ...
 }
 
 javasdk(){
-
+    echo "Getting javasdk"
+    #[ -d $JAVA_DIR ] && rm -rf $JAVA_DIR
+    #git clone https://github.com/algorand/java-algorand-sdk.git
 }
 
 pyteal(){
-
+    echo "Getting pyteal"
+    #[ -d $PYTEAL_DIR ] && rm -rf $PYTEAL_DIR
+    #git clone https://github.com/algorand/pyteal.git
 }
+
+
 
